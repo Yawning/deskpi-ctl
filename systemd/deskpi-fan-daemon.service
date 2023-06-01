@@ -1,0 +1,13 @@
+[Unit]
+Description=DeskPi-Fan-Daemon service
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+ExecStart=/usr/local/bin/deskpi-ctl fan-daemon
+
+[Install]
+WantedBy=multi-user.target

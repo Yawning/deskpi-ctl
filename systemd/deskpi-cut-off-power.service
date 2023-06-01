@@ -1,0 +1,13 @@
+[Unit]
+Description=DeskPi-cut-off-power service
+Conflicts=reboot.target
+DefaultDependencies=no
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/deskpi-ctl shutdown
+RemainAfterExit=yes
+TimeoutStartSec=15
+
+[Install]
+WantedBy=halt.target shutdown.target poweroff.target final.target
