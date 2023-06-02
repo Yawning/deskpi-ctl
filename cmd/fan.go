@@ -15,14 +15,18 @@ const (
 	cmdFanOn     = cmdFanPrefix + "100"
 	cmdFanPrefix = "pwm_"
 
+	flagFanOff = "off-temp"
+	flagFanOn  = "on-temp"
+
 	// See: https://github.com/DeskPi-Team/deskpi/issues/25
 	//
 	//   Under normal circumstances, I recommend setting the temperature
 	//   at 55 degrees to set 100% speed, so that the temperature can be
 	//   controlled while also reducing noise.
 	//
-	fanOffTemp = 50
-	fanOnTemp  = 55
+	fanOffTemp      = 50
+	fanOnTemp       = 55
+	maxSensibleTemp = 80 // Throttling at 85...
 )
 
 var fanCmd = &cobra.Command{
@@ -64,8 +68,22 @@ var fanCmd = &cobra.Command{
 
 var fanDaemonCmd = &cobra.Command{
 	Use:   "fan-daemon",
-	Short: "Turn the fan on/off based on CPU temp",
+	Short: "Turn the fan on/off based on CPU emp",
+	Args: func(cmd *cobra.Command, args []string) error {
+		offTemp, _ := cmd.Flags().GetUint(flagFanOff)
+		onTemp, _ := cmd.Flags().GetUint(flagFanOn)
+		if onTemp <= offTemp {
+			return fmt.Errorf("deskpi-ctl/fan-daemon: invalid off/on range: %d -> %d", offTemp, onTemp)
+		}
+		return nil
+	},
 	RunE: func(cmd *cobra.Command, args []string) error {
+		offTemp, _ := cmd.Flags().GetUint(flagFanOff)
+		onTemp, _ := cmd.Flags().GetUint(flagFanOn)
+		if onTemp > maxSensibleTemp {
+			onTemp = maxSensibleTemp
+		}
+
 		fd, err := getCtrlTty()
 		if err != nil {
 			return fmt.Errorf("deskpi-ctl/fan-daemon: %w", err)
@@ -82,12 +100,12 @@ var fanDaemonCmd = &cobra.Command{
 			var toWrite []byte
 
 			switch {
-			case temp < fanOffTemp:
+			case temp < offTemp:
 				if fanIsOn {
 					toWrite = []byte(cmdFanOff)
 					fanIsOn = false
 				}
-			case temp > fanOnTemp:
+			case temp > onTemp:
 				if !fanIsOn {
 					toWrite = []byte(cmdFanOn)
 					fanIsOn = true
@@ -102,9 +120,10 @@ var fanDaemonCmd = &cobra.Command{
 			time.Sleep(time.Second)
 		}
 	},
+	SilenceUsage: true,
 }
 
-func getCPUTemp() (int, error) {
+func getCPUTemp() (uint, error) {
 	const tempSensorFn = "/sys/class/thermal/thermal_zone0/temp"
 
 	b, err := os.ReadFile(tempSensorFn)
@@ -117,10 +136,13 @@ func getCPUTemp() (int, error) {
 		return 0, fmt.Errorf("deskpi-ctl/fan-daemon: failed to parse CPU temp: %w", err)
 	}
 
-	return temp / 1000, nil
+	return uint(temp / 1000), nil
 }
 
 func init() {
+	fanDaemonCmd.Flags().Uint(flagFanOff, fanOffTemp, "temp (C) to turn fan off")
+	fanDaemonCmd.Flags().Uint(flagFanOn, fanOnTemp, "temp (C) to turn fan on")
+
 	rootCmd.AddCommand(fanCmd)
 	rootCmd.AddCommand(fanDaemonCmd)
 }
