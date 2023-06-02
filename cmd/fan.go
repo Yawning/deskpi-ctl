@@ -14,6 +14,9 @@ const (
 	cmdFanOff    = cmdFanPrefix + "000"
 	cmdFanOn     = cmdFanPrefix + "100"
 	cmdFanPrefix = "pwm_"
+
+	fanOffTemp = 55
+	fanOnTemp  = 60
 )
 
 var fanCmd = &cobra.Command{
@@ -73,12 +76,12 @@ var fanDaemonCmd = &cobra.Command{
 			var toWrite []byte
 
 			switch {
-			case temp < 45:
+			case temp < fanOffTemp:
 				if fanIsOn {
 					toWrite = []byte(cmdFanOff)
 					fanIsOn = false
 				}
-			case temp > 50:
+			case temp > fanOnTemp:
 				if !fanIsOn {
 					toWrite = []byte(cmdFanOn)
 					fanIsOn = true
