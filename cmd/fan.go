@@ -15,8 +15,14 @@ const (
 	cmdFanOn     = cmdFanPrefix + "100"
 	cmdFanPrefix = "pwm_"
 
-	fanOffTemp = 55
-	fanOnTemp  = 60
+	// See: https://github.com/DeskPi-Team/deskpi/issues/25
+	//
+	//   Under normal circumstances, I recommend setting the temperature
+	//   at 55 degrees to set 100% speed, so that the temperature can be
+	//   controlled while also reducing noise.
+	//
+	fanOffTemp = 50
+	fanOnTemp  = 55
 )
 
 var fanCmd = &cobra.Command{

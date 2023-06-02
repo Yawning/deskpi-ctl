@@ -8,7 +8,7 @@ jank (a loopback USB connector on the back), at least it is a sort-of
 ok AArch64 development target that has an actual m.2 SATA SSD, that
 even supports TRIM.
 
-Naturally I would love [something][2] [better][3], but that would cost
+Naturally I would love [something better][2], but that would cost
 money.
 
 The DeskPi creators did release the source code to the scripts that
@@ -27,7 +27,7 @@ control.  Writing various plain text commands (eg: even just with
 ##### Annoyances
 
 - The fan probably just uses low-frequency PWM, and the only duty
-cycles that don't make a lot of really annoying noises are 0% and
+cycles that don't make a lot of [really annoying noises][3] are 0% and
 100%.  I also did not bother checking the extension board to see
 if there is a flyback diode present.
 - The vendor provided C code's serial port initialization is "odd".
@@ -38,5 +38,5 @@ the USB serial device that controls the fan and power.  Remove
 `brltty` to get things to work.
 
 [1]: https://deskpi.com/products/deskpi-pro-for-raspberry-pi-4
-[2]: http://www.orangepi.org/html/hardWare/computerAndMicrocontrollers/details/Orange-Pi-5-plus.html
-[3]: https://www.solid-run.com/arm-servers-networking-platforms/honeycomb-servers-workstation/#honeycomb-lx2-workstation
+[2]: https://www.solid-run.com/arm-servers-networking-platforms/honeycomb-servers-workstation/#honeycomb-lx2-workstation
+[3]: https://github.com/DeskPi-Team/deskpi/issues/25
