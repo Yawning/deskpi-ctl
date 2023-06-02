@@ -1,0 +1,6 @@
+# This will add a `/dev/ttyFAN0` symlink to the USB->Serial converter
+# that controls the fan and power supply.
+#
+# See: https://github.com/DeskPi-Team/deskpi/issues/118
+
+SUBSYSTEM=="tty",ATTRS{idVendor}=="1a86",ATTRS{idProduct}=="7523",ATTRS{busnum}=="3",ATTRS{devnum}=="3",SYMLINK+="ttyFAN0"
