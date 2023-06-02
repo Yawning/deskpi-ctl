@@ -7,3 +7,8 @@
 # - Enable front USB port and fan/power control via ttyUSB0
 dtoverlay=gpio-ir,gpio_pin=17
 dtoverlay=dwc2,dr_mode=host
+
+# Change the default turbo-mode clock to 1.8Ghz (Rpi 4B > R1.3)
+# Enable 60 Hz 4k HDMI output which overclocks the core by 50 Mhz
+arm_boost=1
+hdmi_enable_4kp60=1
