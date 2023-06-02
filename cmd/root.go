@@ -48,7 +48,7 @@ func getCtrlTty() (*term.Term, error) {
 		switch {
 		case errors.Is(err, fs.ErrNotExist):
 		case errors.Is(err, fs.ErrPermission):
-			fmt.Fprintf(os.Stderr, "The user does not have rights to the serial port device (`/dev/ttyUSB0`)\n")
+			fmt.Fprintf(os.Stderr, "The user does not have rights to the serial port device (`%s`)\n", devNode)
 			fmt.Fprintf(os.Stderr, "- Screw around with udev rules\n")
 			fmt.Fprintf(os.Stderr, "- Add your user to the appropriate group (`uucp`, `dialout`)\n")
 			os.Exit(1)
