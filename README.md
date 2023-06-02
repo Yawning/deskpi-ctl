@@ -21,7 +21,7 @@ Electronics CH340 serial converter" (`1a86:7523`), that comes up as
 control.  Writing various plain text commands (eg: even just with
 `echo`), does useful things.
 
-- `pwm_000`, `pwm_025`, `pwm_050`, `pwm_075`, `pwm_100`: Set fan speed.
+- `pwm_000` ...  `pwm_100`: Set fan speed by percent, needs to be 3 digits.
 - `power_off`: Turn off the unit "safely".
 
 ##### Annoyances

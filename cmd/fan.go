@@ -11,26 +11,31 @@ import (
 )
 
 const (
-	cmdFanOff = "pwm_000"
-	cmdFanOn  = "pwm_100"
+	cmdFanOff    = cmdFanPrefix + "000"
+	cmdFanOn     = cmdFanPrefix + "100"
+	cmdFanPrefix = "pwm_"
 )
 
-var speedCmds = map[int]string{
-	0:   cmdFanOff,
-	25:  "pwm_025",
-	50:  "pwm_050",
-	75:  "pwm_075",
-	100: cmdFanOn,
-}
-
 var fanCmd = &cobra.Command{
-	Use:       "fan {0 25 50 75 100}",
-	Short:     "Set the fan speed",
-	Args:      cobra.MatchAll(cobra.ExactArgs(1), cobra.OnlyValidArgs),
-	ValidArgs: []string{"0", "25", "50", "75", "100"},
+	Use:   "fan {0 ... 100}",
+	Short: "Set the fan speed",
+	Args: func(cmd *cobra.Command, args []string) error {
+		if err := cobra.ExactArgs(1)(cmd, args); err != nil {
+			return err
+		}
+		i, err := strconv.Atoi(args[0])
+		if err != nil {
+			return fmt.Errorf("deskpi-ctl/fan: expected integer fan speed")
+		}
+		if i < 0 || i > 100 {
+			return fmt.Errorf("deskpi-ctl/fan: expected fan speed in the range [0, 100]")
+		}
+		return nil
+	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		targetSpeed, _ := strconv.Atoi(args[0])
-		cmdStr := speedCmds[targetSpeed]
+
+		cmdStr := fmt.Sprintf("%s%03d", cmdFanPrefix, targetSpeed)
 
 		fd, err := getCtrlTty()
 		if err != nil {
