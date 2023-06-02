@@ -1,0 +1,9 @@
+#
+# Add to /boot/config.txt to get various things working.
+#
+
+# DeskPi specific options
+# - Enable front IR port
+# - Enable front USB port and fan/power control via ttyUSB0
+dtoverlay=gpio-ir,gpio_pin=17
+dtoverlay=dwc2,dr_mode=host

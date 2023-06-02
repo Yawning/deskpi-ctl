@@ -32,6 +32,10 @@ cycles that don't make a lot of really annoying noises are 0% and
 if there is a flyback diode present.
 - The vendor provided C code's serial port initialization is "odd".
 Thankfully, 9600 8-N-1 "just works".
+- Recent Ubuntu (that I don't use, because Debian/Ubuntu is banned on
+my hardware), has a Braille tty package that claims ownership of
+the USB serial device that controls the fan and power.  Remove
+`brltty` to get things to work.
 
 [1]: https://deskpi.com/products/deskpi-pro-for-raspberry-pi-4
 [2]: http://www.orangepi.org/html/hardWare/computerAndMicrocontrollers/details/Orange-Pi-5-plus.html

@@ -1,0 +1,6 @@
+# This will enable TRIM support on the integrated ASMedia USB->SATA bridge
+# iff sufficiently recent firmware has been installed.  Unfortunately the
+# flash tool requires a Windows system.
+#
+# See: https://github.com/DeskPi-Team/deskpi/blob/master/DeskPi_v3_firmware_upgrade_manual.md
+ACTION=="add|change", ATTRS{idVendor}=="174c", ATTRS{idProduct}=="55aa", SUBSYSTEM=="scsi_disk", ATTR{provisioning_mode}="unmap"
